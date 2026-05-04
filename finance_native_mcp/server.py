@@ -41,4 +41,11 @@ def get_market_news_snapshot(limit: int = 3) -> list[dict]:
 
 
 if __name__ == "__main__":
-    mcp.run()
+    port = int(os.getenv("PORT", "8000"))
+    mcp.run(
+        transport="http",
+        host="0.0.0.0",
+        port=port,
+    )
+
+import os
