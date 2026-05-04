@@ -1,0 +1,6 @@
+name: finance-research-mcp
+runtime: python
+entrypoint: python -m finance_native_mcp.server
+secrets: []
+env:
+  FINANCE_MCP_MOCK_DATA: "true"

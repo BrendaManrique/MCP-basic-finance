@@ -1,66 +1,56 @@
-# Finance Research MCP (Optimized)
+# Finance Research MCP (Native MCP)
 
-This repository contains a professionally structured FastAPI application that can
-be used as the basis for a Model Context Protocol (MCP) server.  The project
-exposes endpoints for basic stock research (quotes, company profiles, top
-movers) and placeholder market news.  It follows best practices for
-maintainability and extensibility by separating configuration, schemas,
-services and routing into dedicated modules.
+This is a **native MCP server** version of Finance Research MCP, built with **FastMCP**. FastMCP servers are created by instantiating `FastMCP`, decorating plain Python functions with `@mcp.tool`, and starting the server with `mcp.run()` according to the official FastMCP docs. citeturn125970search3turn125970search12
 
-## Features
+## What it does
 
-* **Modular design**: Configuration, schemas, services and routes are split into
-  their own modules for clarity and testability.
-* **Type‑safe responses**: All endpoints return Pydantic models, which
-  automatically validate and document the API.
-* **Configurable symbols**: The list of supported stock tickers can be set via
-  the `FINMCP_AVAILABLE_SYMBOLS` environment variable (comma‑separated values).
-* **Caching**: Ticker information retrieved via `yfinance` is cached to
-  minimize repeated network calls.
-* **Error handling**: Custom exceptions and HTTP error responses provide
-  meaningful messages when a symbol is unsupported or data is unavailable.
+The server exposes five finance research tools:
+- `list_supported_symbols`
+- `get_stock_quote`
+- `get_company_profile`
+- `get_top_movers_snapshot`
+- `get_market_news_snapshot`
 
-## Quick Start
+For local testing and safe first deploys, the project defaults to **mock data** via `FINANCE_MCP_MOCK_DATA=true`. Set it to `false` if you want to use `yfinance` for live quotes.
 
-1. **Clone** this repository or copy the `finance_mcp_optimized` directory.
+## Quick start
 
-2. **Install dependencies** (Python 3.9+ recommended):
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python -m finance_native_mcp.server
+```
 
-   ```bash
-   pip install fastapi uvicorn yfinance pydantic
-   ```
+## Local testing
 
-3. **Run the server** using Uvicorn:
+### 1. Verify imports
+```bash
+python -c "from finance_native_mcp.server import mcp; print(mcp)"
+```
 
-   ```bash
-   uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-   ```
+### 2. Verify provider logic
+```bash
+python test_smoke.py
+```
 
-4. **Explore the API** at `http://localhost:8000/docs` to view the automatically
-   generated Swagger UI and test the endpoints.
+### 3. Optional FastMCP inspection
+If you have the FastMCP CLI available, inspect or run the server through the MCP tooling documented by FastMCP.
 
-## Environment Variables
+## Deploying on MCPize
 
-The application's behavior can be customized via environment variables with the
-prefix `FINMCP_`.  The `.env.example` file illustrates how to specify them.
+MCPize says you can deploy either by connecting GitHub and auto-deploying on push or by using `mcpize deploy`, and it notes that adding `mcpize.yaml` configures runtime, secrets, and settings. citeturn125970search5turn125970search2
 
-| Variable | Description | Default |
-| --- | --- | --- |
-| `FINMCP_AVAILABLE_SYMBOLS` | Comma‑separated list of supported tickers | `AAPL,GOOG,MSFT,AMZN,TSLA,META,NVDA,NFLX,BRK-B,JPM,JNJ,V,PG,XOM` |
+This repo includes a `mcpize.yaml` starter manifest so that once you push the repo, MCPize can trigger a deployment from GitHub.
 
-To override the default symbols, create a `.env` file based on `.env.example`
-and update the `FINMCP_AVAILABLE_SYMBOLS` value.
+## Recommended environment variables
 
-## Deployment to MCPize
+- `FINANCE_MCP_MOCK_DATA=true` for safe demo mode
+- `FINANCE_MCP_MOCK_DATA=false` for live `yfinance` mode
 
-Once the API is running, you can deploy it to MCPize by pointing the **Public URL**
-deployment option to your server's OpenAPI specification endpoint
-(`http://your-host:8000/openapi.json`).  MCPize will analyze the spec and
-generate an MCP server automatically.
+## Release checklist
 
-## Extending the API
-
-To add new functionality, create additional functions in `services.py` and
-corresponding Pydantic models in `schemas.py`.  Then expose them through
-`routes.py` by adding new endpoint functions decorated with appropriate
-response models.
+1. Run `python test_smoke.py`
+2. Start the server locally
+3. Confirm MCPize sees the tools after deployment
+4. Only then switch to live market data if desired
