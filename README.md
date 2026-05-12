@@ -1,6 +1,6 @@
 # Finance Research MCP (Native MCP)
 
-This is a **native MCP server** version of Finance Research MCP, built with **FastMCP**. FastMCP servers are created by instantiating `FastMCP`, decorating plain Python functions with `@mcp.tool`, and starting the server with `mcp.run()` according to the official FastMCP docs. citeturn125970search3turn125970search12
+This is a **native MCP server** version of Finance Research MCP, built with **FastMCP**. FastMCP servers are created by instantiating `FastMCP`, decorating plain Python functions with `@mcp.tool`, and starting the server with `mcp.run()` according to the official FastMCP docs. 
 
 ## What it does
 
@@ -39,7 +39,7 @@ If you have the FastMCP CLI available, inspect or run the server through the MCP
 
 ## Deploying on MCPize
 
-MCPize says you can deploy either by connecting GitHub and auto-deploying on push or by using `mcpize deploy`, and it notes that adding `mcpize.yaml` configures runtime, secrets, and settings. citeturn125970search5turn125970search2
+MCPize says you can deploy either by connecting GitHub and auto-deploying on push or by using `mcpize deploy`, and it notes that adding `mcpize.yaml` configures runtime, secrets, and settings. 
 
 This repo includes a `mcpize.yaml` starter manifest so that once you push the repo, MCPize can trigger a deployment from GitHub.
 
